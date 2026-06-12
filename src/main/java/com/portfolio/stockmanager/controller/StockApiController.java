@@ -6,8 +6,11 @@ import com.portfolio.stockmanager.entity.Stock;
 import com.portfolio.stockmanager.service.StockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -55,6 +58,12 @@ public class StockApiController {
     @GetMapping("/sort/profit")
     public List<StockResponse> sortByprofit(){
         return stockService.sortByProfit();
+    }
+
+    @GetMapping("/page")
+    public Page<StockResponse> page(Pageable pageable) {
+
+        return stockService.findPage(pageable);
     }
 }
 
