@@ -45,4 +45,16 @@ public class StockApiController {
 
         return "삭제 완료";
     }
+
+    @GetMapping("/search")
+    public List<StockResponse> search(@RequestParam String keyword) {
+
+        return stockService.search(keyword);
+    }
+
+    @GetMapping("/sort/profit")
+    public List<StockResponse> sortByprofit(){
+        return stockService.sortByProfit();
+    }
 }
+

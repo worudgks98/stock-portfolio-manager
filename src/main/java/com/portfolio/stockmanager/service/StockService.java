@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,5 +62,27 @@ public class StockService {
                         new IllegalArgumentException("종목이 없습니다."));
 
         stockRepository.delete(stock);
+    }
+
+    public List<StockResponse> search(String keyword){
+
+        return stockRepository
+                .findByStockNameContaining(keyword)
+                .stream()
+                .map(StockResponse::new)
+                .toList();
+    }
+
+    public List<StockResponse> sortByProfit(){
+
+        return stockRepository.findAll()
+                .stream()
+                .map(StockResponse::new)
+                .sorted(
+                        Comparator.comparing(
+                                StockResponse::getProfitRate
+                        ).reversed()
+                )
+                .toList();
     }
 }
