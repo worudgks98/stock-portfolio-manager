@@ -1,0 +1,65 @@
+package com.portfolio.stockmanager.service;
+
+import com.portfolio.stockmanager.dto.StockResponse;
+import com.portfolio.stockmanager.dto.StockSaveRequest;
+import com.portfolio.stockmanager.entity.Stock;
+import com.portfolio.stockmanager.repository.StockRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class StockService {
+
+    private final StockRepository stockRepository;
+
+    public Long save(StockSaveRequest request){
+
+        Stock stock = Stock.builder()
+                .stockName(request.getStockName())
+                .quantity(request.getQuantity())
+                .buyPrice(request.getBuyPrice())
+                .currentPrice(request.getCurrentPrie())
+                .build();
+
+        return stockRepository.save(stock).getId();
+    }
+
+    public List<StockResponse> findAll(){
+
+        return stockRepository.findAll()
+                .stream()
+                .map(StockResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Long update(Long id,StockSaveRequest request){
+
+        Stock stock = stockRepository.findById(id)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("종목이 없습니다."));
+
+        stock.update(request.getStockName(),
+                request.getQuantity(),
+                request.getBuyPrice(),
+                request.getCurrentPrie()
+        );
+
+        return stock.getId();
+    }
+
+    @Transactional
+    public void delete(Long id){
+
+        Stock stock = stockRepository.findById(id)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("종목이 없습니다."));
+
+        stockRepository.delete(stock);
+    }
+}
