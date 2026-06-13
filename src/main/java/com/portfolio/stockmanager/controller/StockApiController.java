@@ -8,12 +8,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import java.util.List;
 
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5174")
 @RequestMapping("api/stocks")
 public class StockApiController {
 
