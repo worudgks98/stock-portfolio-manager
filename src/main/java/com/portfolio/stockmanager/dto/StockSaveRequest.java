@@ -13,5 +13,5 @@ public class StockSaveRequest {
 
     private Integer buyPrice;
 
-    private Integer currentPrie;
+    private Integer currentPrice;
 }

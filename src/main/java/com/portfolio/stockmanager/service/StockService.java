@@ -25,6 +25,11 @@ public class StockService {
 
     public Long save(Long memberId,StockSaveRequest request){
 
+        System.out.println("stockName = " + request.getStockName());
+        System.out.println("quantity = " + request.getQuantity());
+        System.out.println("buyPrice = " + request.getBuyPrice());
+        System.out.println("currentPrice = " + request.getCurrentPrice());
+
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원 없음"));
 
@@ -32,7 +37,7 @@ public class StockService {
                 .stockName(request.getStockName())
                 .quantity(request.getQuantity())
                 .buyPrice(request.getBuyPrice())
-                .currentPrice(request.getCurrentPrie())
+                .currentPrice(request.getCurrentPrice())
                 .member(member)
                 .build();
 
@@ -57,7 +62,7 @@ public class StockService {
         stock.update(request.getStockName(),
                 request.getQuantity(),
                 request.getBuyPrice(),
-                request.getCurrentPrie()
+                request.getCurrentPrice()
         );
 
         return stock.getId();
