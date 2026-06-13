@@ -20,9 +20,9 @@ public class StockApiController {
     private final StockService stockService;
 
     @PostMapping
-    public Long save(@RequestBody StockSaveRequest request) {
+    public Long save(@PathVariable Long memberId,@RequestBody StockSaveRequest request) {
 
-        return stockService.save(request);
+        return stockService.save(memberId,request);
     }
 
     @GetMapping("/test")
@@ -30,9 +30,9 @@ public class StockApiController {
         return "stock api ok";
     }
 
-    @GetMapping
-    public List<StockResponse> findAll() {
-        return stockService.findAll();
+    @GetMapping("/{memberId}")
+    public List<StockResponse> findAll(@PathVariable Long memberId) {
+        return stockService.findAll(memberId);
     }
 
     @PutMapping("/{id}")

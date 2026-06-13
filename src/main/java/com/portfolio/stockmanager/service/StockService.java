@@ -2,7 +2,9 @@ package com.portfolio.stockmanager.service;
 
 import com.portfolio.stockmanager.dto.StockResponse;
 import com.portfolio.stockmanager.dto.StockSaveRequest;
+import com.portfolio.stockmanager.entity.Member;
 import com.portfolio.stockmanager.entity.Stock;
+import com.portfolio.stockmanager.repository.MemberRepository;
 import com.portfolio.stockmanager.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,8 +21,12 @@ import org.springframework.data.domain.Pageable;
 public class StockService {
 
     private final StockRepository stockRepository;
+    private final MemberRepository memberRepository;
 
-    public Long save(StockSaveRequest request){
+    public Long save(Long memberId,StockSaveRequest request){
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원 없음"));
 
         Stock stock = Stock.builder()
                 .stockName(request.getStockName())
@@ -32,9 +38,9 @@ public class StockService {
         return stockRepository.save(stock).getId();
     }
 
-    public List<StockResponse> findAll(){
+    public List<StockResponse> findAll(Long memberId){
 
-        return stockRepository.findAll()
+        return stockRepository.findByMemberId(memberId)
                 .stream()
                 .map(StockResponse::new)
                 .collect(Collectors.toList());
