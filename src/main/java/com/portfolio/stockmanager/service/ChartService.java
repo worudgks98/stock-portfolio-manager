@@ -15,9 +15,9 @@ public class ChartService {
 
     private final StockRepository stockRepository;
 
-    public List<AllocationResponse> getAllocation(){
+    public List<AllocationResponse> getAllocation(Long memberId){
 
-        List<Stock> stocks = stockRepository.findAll();
+        List<Stock> stocks = stockRepository.findByMemberId(memberId);
 
         List<AllocationResponse> result = new ArrayList<>();
 

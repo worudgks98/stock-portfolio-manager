@@ -14,9 +14,9 @@ public class DashboardService {
 
     private final StockRepository stockRepository;
 
-    public DashboardResponse getDashboard(){
+    public DashboardResponse getDashboard(Long memberid){
 
-        List<Stock> stocks = stockRepository.findAll();
+        List<Stock> stocks = stockRepository.findByMemberId(memberid);
 
         long totalInvestment = 0;
         long totalcurrentValue = 0;

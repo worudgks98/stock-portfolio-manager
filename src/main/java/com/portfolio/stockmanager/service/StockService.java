@@ -33,6 +33,7 @@ public class StockService {
                 .quantity(request.getQuantity())
                 .buyPrice(request.getBuyPrice())
                 .currentPrice(request.getCurrentPrie())
+                .member(member)
                 .build();
 
         return stockRepository.save(stock).getId();

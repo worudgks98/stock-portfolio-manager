@@ -19,7 +19,7 @@ public class StockApiController {
 
     private final StockService stockService;
 
-    @PostMapping
+    @PostMapping("/{memberId}")
     public Long save(@PathVariable Long memberId,@RequestBody StockSaveRequest request) {
 
         return stockService.save(memberId,request);
