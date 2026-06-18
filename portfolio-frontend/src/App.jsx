@@ -16,6 +16,7 @@ function App() {
   const [buyPrice, setBuyPrice] = useState("");
   const [currentPrice, setCurrentPrice] = useState("");
   const [quantity, setQuantity] = useState("");
+  const [editingId, setEditingId] = useState(null);
 
   const loadStocks = () => {
     axios
@@ -36,6 +37,43 @@ function App() {
             loadStocks();
           });
       };
+
+  const editStock = (stock) => {
+
+    setEditingId(stock.id);
+
+    setStockName(stock.stockName);
+    setBuyPrice(stock.buyPrice);
+    setCurrentPrice(stock.currentPrice);
+    setQuantity(stock.quantity);
+  };
+
+  const updateStock = () => {
+
+    const request = {
+      stockName,
+      buyPrice: Number(buyPrice),
+      currentPrice: Number(currentPrice),
+      quantity: Number(quantity)
+    };
+
+    axios
+      .put(
+        `http://localhost:8080/api/stocks/${editingId}`,
+        request
+      )
+      .then(() => {
+
+        setEditingId(null);
+
+        setStockName("");
+        setBuyPrice("");
+        setCurrentPrice("");
+        setQuantity("");
+
+        loadStocks();
+      });
+  };
 
   const addStock = () => {
 
@@ -153,9 +191,15 @@ function App() {
           onChange={(e) => setQuantity(e.target.value)}
         />
 
-        <button onClick={addStock}>
-          종목 추가
-        </button>
+        {editingId ? (
+          <button onClick={updateStock}>
+            수정 완료
+          </button>
+        ) : (
+          <button onClick={addStock}>
+            종목 추가
+          </button>
+        )}
       </div>
 
       <hr />
@@ -187,9 +231,21 @@ function App() {
               <td>{stock.profit}</td>
               <td>{stock.profitRate?.toFixed(2)}%</td>
               <td>
-                <button onClick={() => deleteStock(stock.id)}>
-                  삭제
-                </button>
+                <td>
+
+                  <button
+                    onClick={() => editStock(stock)}
+                  >
+                    수정
+                  </button>
+
+                  <button
+                    onClick={() => deleteStock(stock.id)}
+                  >
+                    삭제
+                  </button>
+
+                </td>
               </td>
             </tr>
           ))}
