@@ -22,6 +22,14 @@ function App() {
     loadStocks();
   }, []);
 
+  const deleteStock = (id) => {
+        axios
+          .delete(`http://localhost:8080/api/stocks/${id}`)
+          .then(() => {
+            loadStocks();
+          });
+      };
+
   const addStock = () => {
 
     const request = {
@@ -92,6 +100,7 @@ function App() {
             <th>평가금액</th>
             <th>손익</th>
             <th>수익률</th>
+            <th>관리</th>
           </tr>
         </thead>
 
@@ -106,6 +115,11 @@ function App() {
               <td>{stock.currentValue}</td>
               <td>{stock.profit}</td>
               <td>{stock.profitRate?.toFixed(2)}%</td>
+              <td>
+                <button onClick={() => deleteStock(stock.id)}>
+                  삭제
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
