@@ -81,13 +81,35 @@ function App() {
 
       <hr />
 
-      <ul>
-        {stocks.map((stock) => (
-          <li key={stock.id}>
-            {stock.stockName}
-          </li>
-        ))}
-      </ul>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>종목명</th>
+            <th>매수가</th>
+            <th>현재가</th>
+            <th>수량</th>
+            <th>투자금액</th>
+            <th>평가금액</th>
+            <th>손익</th>
+            <th>수익률</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {stocks.map((stock) => (
+            <tr key={stock.id}>
+              <td>{stock.stockName}</td>
+              <td>{stock.buyPrice}</td>
+              <td>{stock.currentPrice}</td>
+              <td>{stock.quantity}</td>
+              <td>{stock.investment}</td>
+              <td>{stock.currentValue}</td>
+              <td>{stock.profit}</td>
+              <td>{stock.profitRate?.toFixed(2)}%</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
     </div>
   );
