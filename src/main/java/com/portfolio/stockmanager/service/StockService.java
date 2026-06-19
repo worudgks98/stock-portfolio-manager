@@ -78,11 +78,17 @@ public class StockService {
         stockRepository.delete(stock);
     }
 
-    public List<StockResponse> search(String keyword){
+    public List<StockResponse> search(
+            Long memberId,
+            String keyword
+    ) {
 
         return stockRepository
-                .findByStockNameContaining(keyword)
+                .findByMemberId(memberId)
                 .stream()
+                .filter(stock ->
+                        stock.getStockName()
+                                .contains(keyword))
                 .map(StockResponse::new)
                 .toList();
     }
@@ -105,5 +111,20 @@ public class StockService {
         return stockRepository
                 .findAll(pageable)
                 .map(StockResponse::new);
+    }
+
+    public List<StockResponse> sortByProfitRate(Long memberId) {
+
+        return stockRepository.findByMemberId(memberId)
+                .stream()
+                .map(StockResponse::new)
+                .sorted(
+                        (a, b) ->
+                                Double.compare(
+                                        b.getProfitRate(),
+                                        a.getProfitRate()
+                                )
+                )
+                .toList();
     }
 }

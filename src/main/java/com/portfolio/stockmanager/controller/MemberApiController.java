@@ -2,16 +2,15 @@ package com.portfolio.stockmanager.controller;
 
 import com.portfolio.stockmanager.dto.LoginRequest;
 import com.portfolio.stockmanager.dto.MemberSignupRequest;
+import com.portfolio.stockmanager.entity.Member;
 import com.portfolio.stockmanager.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
+@CrossOrigin(origins = "http://localhost:5173")
 public class MemberApiController {
 
     private final MemberService memberService;
@@ -23,13 +22,15 @@ public class MemberApiController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request){
+    public Member login(
+            @RequestBody LoginRequest request
+    ) {
 
-        boolean succes = memberService.login(request);
+        return memberService.login(request);
+    }
 
-        if(succes){
-            return "login success";
-        }
-        return "login fail";
+    @GetMapping("/test")
+    public String test() {
+        return "member ok";
     }
 }

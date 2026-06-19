@@ -10,4 +10,6 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
     List<Stock> findByStockNameContaining(String keyword);
 
     List<Stock> findByMemberId(Long memberId);
+
+    List<Stock> findAllByOrderByCurrentPriceDesc();
 }

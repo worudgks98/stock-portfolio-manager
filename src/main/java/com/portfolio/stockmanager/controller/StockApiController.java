@@ -51,9 +51,15 @@ public class StockApiController {
     }
 
     @GetMapping("/search")
-    public List<StockResponse> search(@RequestParam String keyword) {
+    public List<StockResponse> search(
+            @RequestParam Long memberId,
+            @RequestParam String keyword
+    ) {
 
-        return stockService.search(keyword);
+        return stockService.search(
+                memberId,
+                keyword
+        );
     }
 
     @GetMapping("/sort/profit")
@@ -65,6 +71,13 @@ public class StockApiController {
     public Page<StockResponse> page(Pageable pageable) {
 
         return stockService.findPage(pageable);
+    }
+    @GetMapping("/sort/profit-rate/{memberId}")
+    public List<StockResponse> sortByProfitRate(
+            @PathVariable Long memberId
+    ) {
+
+        return stockService.sortByProfitRate(memberId);
     }
 }
 

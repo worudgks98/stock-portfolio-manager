@@ -30,16 +30,23 @@ public class MemberService {
         return memberRepository.save(member).getId();
     }
 
-    public boolean login(LoginRequest request){
+    public Member login(LoginRequest request){
 
         Member member = memberRepository
-                .findByEmail(request.getPassword())
+                .findByEmail(request.getEmail())
                 .orElse(null);
 
         if(member == null){
-            return false;
+            return null;
         }
 
-        return passwordEncoder.matches(request.getPassword(), member.getPassword());
+        if(passwordEncoder.matches(
+                request.getPassword(),
+                member.getPassword()
+        )){
+            return member;
+        }
+
+        return null;
     }
 }
