@@ -9,12 +9,15 @@ import com.portfolio.stockmanager.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import java.util.Map;
+import java.util.HashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -22,10 +25,25 @@ public class StockService {
 
     private final StockRepository stockRepository;
     private final MemberRepository memberRepository;
+    private final Map<String, String> tickerMap =
+            new HashMap<>();
+
+    {
+        tickerMap.put("Apple", "AAPL");
+        tickerMap.put("Nvidia", "NVDA");
+        tickerMap.put("Tesla", "TSLA");
+        tickerMap.put("Microsoft", "MSFT");
+
+        tickerMap.put("삼성전자", "005930.KS");
+        tickerMap.put("SK하이닉스", "000660.KS");
+        tickerMap.put("NAVER", "035420.KS");
+        tickerMap.put("카카오", "035720.KS");
+    }
 
     public Long save(Long memberId,StockSaveRequest request){
 
         System.out.println("stockName = " + request.getStockName());
+        System.out.println("ticker =" + request.getTicker());
         System.out.println("quantity = " + request.getQuantity());
         System.out.println("buyPrice = " + request.getBuyPrice());
         System.out.println("currentPrice = " + request.getCurrentPrice());
@@ -35,6 +53,7 @@ public class StockService {
 
         Stock stock = Stock.builder()
                 .stockName(request.getStockName())
+                .ticker(request.getTicker())
                 .quantity(request.getQuantity())
                 .buyPrice(request.getBuyPrice())
                 .currentPrice(request.getCurrentPrice())
@@ -60,6 +79,7 @@ public class StockService {
                         new IllegalArgumentException("종목이 없습니다."));
 
         stock.update(request.getStockName(),
+                request.getTicker(),
                 request.getQuantity(),
                 request.getBuyPrice(),
                 request.getCurrentPrice()
@@ -127,4 +147,71 @@ public class StockService {
                 )
                 .toList();
     }
+
+    public Double getPrice(String ticker) {
+
+        String apiKey = "DWJ2I1VITYS4W71O";
+
+        String url =
+                "https://www.alphavantage.co/query" +
+                        "?function=GLOBAL_QUOTE" +
+                        "&symbol=" + ticker +
+                        "&apikey=" + apiKey;
+
+        RestTemplate restTemplate =
+                new RestTemplate();
+
+        Map response =
+                restTemplate.getForObject(
+                        url,
+                        Map.class
+                );
+
+        System.out.println(response);
+
+        Map quote =
+                (Map) response.get("Global Quote");
+
+        if (quote == null ||
+                quote.get("05. price") == null) {
+
+            System.out.println(
+                    "가격 조회 실패: " + ticker
+            );
+
+            return null;
+        }
+
+        return Double.parseDouble(
+                quote.get("05. price").toString()
+        );
+    }
+    @Transactional
+    public void refreshPrices() {
+
+        List<Stock> stocks =
+                stockRepository.findAll();
+
+        for (Stock stock : stocks) {
+
+            System.out.println(
+                    "ticker = " + stock.getTicker()
+            );
+
+            Double price =
+                    getPrice(stock.getTicker());
+
+            if(price != null){
+                stock.updateCurrentPrice(
+                        price.intValue()
+                );
+            }
+        }
+    }
+
+    public String findTicker(String stockName) {
+
+        return tickerMap.get(stockName);
+    }
+
 }

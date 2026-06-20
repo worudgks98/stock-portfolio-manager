@@ -79,5 +79,26 @@ public class StockApiController {
 
         return stockService.sortByProfitRate(memberId);
     }
+    @GetMapping("/price/{ticker}")
+    public Double getPrice(@PathVariable String ticker){
+
+        return stockService.getPrice(ticker);
+    }
+    @GetMapping("/refresh")
+    public String refresh() {
+
+        stockService.refreshPrices();
+
+        return "ok";
+    }
+    @GetMapping("/ticker")
+    public String findTicker(
+            @RequestParam String stockName
+    ) {
+
+        return stockService.findTicker(
+                stockName
+        );
+    }
 }
 

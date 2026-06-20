@@ -8,6 +8,7 @@ public class StockResponse {
 
     private Long id;
     private String stockName;
+    private String ticker;
     private Integer quantity;
     private Integer buyPrice;
     private Integer currentPrice;
@@ -20,6 +21,7 @@ public class StockResponse {
     public StockResponse(Stock stock){
         this.id = stock.getId();
         this.stockName = stock.getStockName();
+        this.ticker = stock.getTicker();
         this.quantity = stock.getQuantity();
         this.buyPrice = stock.getBuyPrice();
         this.currentPrice = stock.getCurrentPrice();

@@ -27,6 +27,7 @@ function App() {
   const [stocks, setStocks] = useState([]);
 
   const [stockName, setStockName] = useState("");
+  const [ticker, setTicker] = useState("");
   const [buyPrice, setBuyPrice] = useState("");
   const [currentPrice, setCurrentPrice] = useState("");
   const [quantity, setQuantity] = useState("");
@@ -66,6 +67,16 @@ function App() {
   }, []);
 
   useEffect(() => {
+
+    if (!ticker) {
+      return;
+    }
+
+    loadCurrentPrice();
+
+  }, [ticker]);
+
+  useEffect(() => {
     loadStocks();
   }, []);
 
@@ -82,6 +93,7 @@ function App() {
     setEditingId(stock.id);
 
     setStockName(stock.stockName);
+    setTicker(stock.ticker);
     setBuyPrice(stock.buyPrice);
     setCurrentPrice(stock.currentPrice);
     setQuantity(stock.quantity);
@@ -91,6 +103,7 @@ function App() {
 
     const request = {
       stockName,
+      ticker: ticker,
       buyPrice: Number(buyPrice),
       currentPrice: Number(currentPrice),
       quantity: Number(quantity)
@@ -106,6 +119,7 @@ function App() {
         setEditingId(null);
 
         setStockName("");
+        setTicker("");
         setBuyPrice("");
         setCurrentPrice("");
         setQuantity("");
@@ -142,10 +156,55 @@ function App() {
       });
   };
 
+  const loadCurrentPrice = () => {
+
+    axios
+      .get(
+        `http://localhost:8080/api/stocks/price/${ticker}`
+      )
+      .then((response) => {
+
+        setCurrentPrice(
+          response.data
+        );
+
+      });
+  };
+
+  const loadTicker = () => {
+
+    axios
+      .get(
+        `http://localhost:8080/api/stocks/ticker?stockName=${stockName}`
+      )
+      .then((response) => {
+
+        setTicker(response.data);
+
+        return axios.get(
+          `http://localhost:8080/api/stocks/price/${response.data}`
+        );
+
+      })
+      .then((response) => {
+
+        setCurrentPrice(
+          response.data
+        );
+
+      })
+      .catch(() => {
+
+        alert("등록되지 않은 종목입니다.");
+
+      });
+  };
+
   const addStock = () => {
 
       const request = {
         stockName: stockName,
+        ticker: ticker,
         buyPrice: Number(buyPrice),
         currentPrice: Number(currentPrice),
         quantity: Number(quantity)
@@ -162,6 +221,7 @@ function App() {
         .then(() => {
 
           setStockName("");
+          setTicker("");
           setBuyPrice("");
           setCurrentPrice("");
           setQuantity("");
@@ -587,6 +647,7 @@ function App() {
             placeholder="종목명"
             value={stockName}
             onChange={(e) => setStockName(e.target.value)}
+            onBlur={loadTicker}
           />
 
           <input
@@ -606,7 +667,7 @@ function App() {
             }}
             placeholder="현재가"
             value={currentPrice}
-            onChange={(e) => setCurrentPrice(e.target.value)}
+            readOnly
           />
 
           <input
@@ -663,6 +724,7 @@ function App() {
    >
      <tr>
        <th style={{ padding: "15px" }}>종목명</th>
+       <th style={{ padding: "15px" }}>티커</th>
        <th style={{ padding: "15px" }}>매수가</th>
        <th style={{ padding: "15px" }}>현재가</th>
        <th style={{ padding: "15px" }}>수량</th>
@@ -686,6 +748,10 @@ function App() {
                           textAlign: "center" }}>
            {stock.stockName}
          </td>
+         <td style={{ padding: "15px",
+                                   textAlign: "center" }}>
+                    {stock.ticker}
+                  </td>
          <td style={{ padding: "15px",
                           textAlign: "center" }}>
            {stock.buyPrice}

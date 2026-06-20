@@ -9,6 +9,8 @@ public class StockSaveRequest {
 
     private String stockName;
 
+    private String ticker;
+
     private Integer quantity;
 
     private Integer buyPrice;
