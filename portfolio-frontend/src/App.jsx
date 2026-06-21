@@ -292,6 +292,21 @@ function App() {
     window.location.reload();
   };
 
+  const refreshPrices = () => {
+
+    axios
+      .post(
+        "http://localhost:8080/api/stocks/refresh"
+      )
+      .then(() => {
+
+        alert("가격 갱신 완료");
+
+        loadStocks();
+
+      });
+  };
+
   const totalInvestment = stocks.reduce(
     (sum, stock) => sum + stock.investment,
     0
@@ -632,6 +647,17 @@ function App() {
                   onClick={sortByProfitRate}
                 >
                   수익률순 정렬
+                </button>
+
+
+                <button
+                  style={{
+                      padding: "8px 15px",
+                      marginLeft: "5px"
+                  }}
+                  onClick={refreshPrices}
+                >
+                  🔄 현재가 갱신
                 </button>
 
               </div>

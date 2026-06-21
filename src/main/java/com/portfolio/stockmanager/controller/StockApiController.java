@@ -85,7 +85,7 @@ public class StockApiController {
         return stockService.getPrice(ticker);
     }
     @GetMapping("/refresh")
-    public String refresh() {
+    public String refreshPrices() {
 
         stockService.refreshPrices();
 
