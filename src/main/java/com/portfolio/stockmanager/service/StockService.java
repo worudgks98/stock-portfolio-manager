@@ -10,6 +10,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Comparator;
 import java.util.List;
@@ -150,41 +156,62 @@ public class StockService {
 
     public Double getPrice(String ticker) {
 
-        String apiKey = "DWJ2I1VITYS4W71O";
+        try {
 
-        String url =
-                "https://www.alphavantage.co/query" +
-                        "?function=GLOBAL_QUOTE" +
-                        "&symbol=" + ticker +
-                        "&apikey=" + apiKey;
+            String url =
+                    "https://query1.finance.yahoo.com/v8/finance/chart/"
+                            + ticker;
 
-        RestTemplate restTemplate =
-                new RestTemplate();
+            RestTemplate restTemplate =
+                    new RestTemplate();
 
-        Map response =
-                restTemplate.getForObject(
-                        url,
-                        Map.class
-                );
+            HttpHeaders headers =
+                    new HttpHeaders();
 
-        System.out.println(response);
+            headers.set(
+                    "User-Agent",
+                    "Mozilla/5.0"
+            );
 
-        Map quote =
-                (Map) response.get("Global Quote");
+            HttpEntity<String> entity =
+                    new HttpEntity<>(headers);
 
-        if (quote == null ||
-                quote.get("05. price") == null) {
+            ResponseEntity<String> response =
+                    restTemplate.exchange(
+                            url,
+                            HttpMethod.GET,
+                            entity,
+                            String.class
+                    );
+
+            String json =
+                    response.getBody();
+
+            System.out.println(json);
+
+            ObjectMapper mapper =
+                    new ObjectMapper();
+
+            JsonNode root =
+                    mapper.readTree(json);
+
+            return root
+                    .path("chart")
+                    .path("result")
+                    .get(0)
+                    .path("meta")
+                    .path("regularMarketPrice")
+                    .asDouble();
+
+        } catch (Exception e) {
 
             System.out.println(
-                    "가격 조회 실패: " + ticker
+                    "가격 조회 실패 : " + ticker
             );
+            e.printStackTrace();
 
             return null;
         }
-
-        return Double.parseDouble(
-                quote.get("05. price").toString()
-        );
     }
     @Transactional
     public void refreshPrices() {
