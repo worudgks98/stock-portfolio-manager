@@ -195,13 +195,23 @@ public class StockService {
             JsonNode root =
                     mapper.readTree(json);
 
-            return root
+            Double price = root
                     .path("chart")
                     .path("result")
                     .get(0)
                     .path("meta")
                     .path("regularMarketPrice")
                     .asDouble();
+
+            if (!ticker.endsWith(".KS")) {
+
+                Double exchangeRate =
+                        getUsdKrwRate();
+
+                price = price * exchangeRate;
+            }
+
+            return price;
 
         } catch (Exception e) {
 
@@ -239,6 +249,60 @@ public class StockService {
     public String findTicker(String stockName) {
 
         return tickerMap.get(stockName);
+    }
+
+    public Double getUsdKrwRate() {
+
+        try {
+
+            String url =
+                    "https://query1.finance.yahoo.com/v8/finance/chart/KRW=X";
+
+            RestTemplate restTemplate =
+                    new RestTemplate();
+
+            HttpHeaders headers =
+                    new HttpHeaders();
+
+            headers.set(
+                    "User-Agent",
+                    "Mozilla/5.0"
+            );
+
+            HttpEntity<String> entity =
+                    new HttpEntity<>(headers);
+
+            ResponseEntity<String> response =
+                    restTemplate.exchange(
+                            url,
+                            HttpMethod.GET,
+                            entity,
+                            String.class
+                    );
+
+            String json =
+                    response.getBody();
+
+            ObjectMapper mapper =
+                    new ObjectMapper();
+
+            JsonNode root =
+                    mapper.readTree(json);
+
+            return root
+                    .path("chart")
+                    .path("result")
+                    .get(0)
+                    .path("meta")
+                    .path("regularMarketPrice")
+                    .asDouble();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            return null;
+        }
     }
 
 }

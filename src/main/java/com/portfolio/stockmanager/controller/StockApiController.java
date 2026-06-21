@@ -100,5 +100,11 @@ public class StockApiController {
                 stockName
         );
     }
+
+    @GetMapping("/exchange-rate")
+    public Double exchangeRate() {
+
+        return stockService.getUsdKrwRate();
+    }
 }
 

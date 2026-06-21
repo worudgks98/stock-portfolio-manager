@@ -165,7 +165,7 @@ function App() {
       .then((response) => {
 
         setCurrentPrice(
-          response.data
+          Math.round(response.data)
         );
 
       });
