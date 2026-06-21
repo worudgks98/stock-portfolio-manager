@@ -39,11 +39,45 @@ public class StockService {
         tickerMap.put("Nvidia", "NVDA");
         tickerMap.put("Tesla", "TSLA");
         tickerMap.put("Microsoft", "MSFT");
+        tickerMap.put("Amazon", "AMZN");
+        tickerMap.put("Google", "GOOGL");
+        tickerMap.put("Meta", "META");
+        tickerMap.put("Netflix", "NFLX");
+        tickerMap.put("AMD", "AMD");
+        tickerMap.put("Broadcom", "AVGO");
+
+        tickerMap.put("Intel", "INTC");
+        tickerMap.put("Qualcomm", "QCOM");
+        tickerMap.put("Adobe", "ADBE");
+        tickerMap.put("Salesforce", "CRM");
+        tickerMap.put("Oracle", "ORCL");
+        tickerMap.put("Berkshire Hathaway", "BRK.B");
+        tickerMap.put("CocaCola", "KO");
+        tickerMap.put("Pepsi", "PEP");
+        tickerMap.put("Disney", "DIS");
+        tickerMap.put("PayPal", "PYPL");
 
         tickerMap.put("삼성전자", "005930.KS");
         tickerMap.put("SK하이닉스", "000660.KS");
         tickerMap.put("NAVER", "035420.KS");
         tickerMap.put("카카오", "035720.KS");
+        tickerMap.put("LG에너지솔루션", "373220.KS");
+        tickerMap.put("현대차", "005380.KS");
+        tickerMap.put("기아", "000270.KS");
+        tickerMap.put("삼성바이오로직스", "207940.KS");
+        tickerMap.put("POSCO홀딩스", "005490.KS");
+        tickerMap.put("KB금융", "105560.KS");
+
+        tickerMap.put("신한지주", "055550.KS");
+        tickerMap.put("하나금융지주", "086790.KS");
+        tickerMap.put("LG화학", "051910.KS");
+        tickerMap.put("삼성SDI", "006400.KS");
+        tickerMap.put("LG전자", "066570.KS");
+        tickerMap.put("현대모비스", "012330.KS");
+        tickerMap.put("카카오뱅크", "323410.KS");
+        tickerMap.put("카카오페이", "377300.KS");
+        tickerMap.put("SK텔레콤", "017670.KS");
+        tickerMap.put("KT", "030200.KS");
     }
 
     public Long save(Long memberId,StockSaveRequest request){
