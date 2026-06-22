@@ -31,7 +31,7 @@ public class StockApiController {
         return "stock api ok";
     }
 
-    @GetMapping("/{memberId}")
+    @GetMapping("/member/{memberId}")
     public List<StockResponse> findAll(@PathVariable Long memberId) {
         return stockService.findAll(memberId);
     }
@@ -84,7 +84,7 @@ public class StockApiController {
 
         return stockService.getPrice(ticker);
     }
-    @GetMapping("/refresh")
+    @PostMapping("/refresh")
     public String refreshPrices() {
 
         stockService.refreshPrices();

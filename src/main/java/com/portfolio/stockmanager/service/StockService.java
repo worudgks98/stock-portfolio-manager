@@ -265,12 +265,16 @@ public class StockService {
 
         for (Stock stock : stocks) {
 
-            System.out.println(
-                    "ticker = " + stock.getTicker()
-            );
-
             Double price =
                     getPrice(stock.getTicker());
+
+            System.out.println(
+                    stock.getTicker()
+                            + " old="
+                            + stock.getCurrentPrice()
+                            + " new="
+                            + price
+            );
 
             if(price != null){
                 stock.updateCurrentPrice(

@@ -48,7 +48,7 @@ function App() {
 
     axios
       .get(
-        `http://localhost:8080/api/stocks/${memberId}`
+        `http://localhost:8080/api/stocks/member/${memberId}`
       )
       .then((response) => {
         setStocks(response.data);
